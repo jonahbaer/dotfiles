@@ -88,7 +88,7 @@
   :config
   (sml/setup))
 
-(use-package dashboard 
+(use-package dashboard
   :ensure t
   :config
   (setq dashboard-banner-logo-title "Welcome to (GNU) Emacs: An extensible, customizable, free/libre text editor - and more."
