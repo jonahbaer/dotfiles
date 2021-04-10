@@ -139,7 +139,8 @@
 (use-package aggressive-indent
   :hook
   (emacs-lisp-mode . aggressive-indent-mode)
-  (scheme-mode . aggressive-indent-mode))
+  (scheme-mode . aggressive-indent-mode)
+  (racket-mode . aggressive-indent-mode))
 
 (use-package ace-jump-mode
   :config
