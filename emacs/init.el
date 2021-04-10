@@ -65,10 +65,6 @@
 ;;       indent-tabs-mode t)
 (add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
 
-;; some settings for rust lang
-;; (add-hook rustic-hook
-;; 	  (lambda () (setq indent-tabs-mode nil)))
-
 ;; some settings for org-mode
 (require 'org)
 (setq org-startup-indented t)
