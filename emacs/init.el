@@ -1,32 +1,3 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#262221" "#e84c58" "#91f368" "#eed891" "#41b0f3" "#cea2ca" "#6bd9db" "#eee6d3"])
- '(custom-safe-themes
-   '("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default))
- '(newsticker-url-list
-   '(("Slashdot" "http://rss.slashdot.org/Slashdot/slashdotMain" nil nil nil)
-     ("Arch Linux" "https://archlinux.org/feeds/news/" nil nil nil)
-     ("FiveThirtyEight" "https://fivethirtyeight.com/all/feed" nil nil nil)))
- '(org-agenda-files
-   '("~/Documents/notes/misc.org" "~/Documents/school/school.org"))
- '(package-selected-packages
-   '(zenburn-theme racket-mode kaolin-themes smart-mode-line helm-themes fish-mode helm-lsp helm all-the-icons-dired org-superstar popwin lsp-treemacs projectile helpful dashboard ace-jump-mode rustic go-mode all-the-icons magit aggressive-indent smartparens company-lsp nlinum-relative ccls rainbow-delimiters markdown-mode which-key company flycheck lsp-ui lsp-mode use-package))
- '(pos-tip-background-color "#2E2A29")
- '(pos-tip-foreground-color "#d4d4d6"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-
 ;; Set up melpa
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -70,7 +41,19 @@
 (setq org-startup-indented t)
 (add-to-list 'org-modules 'org-habit)
 
+(setq org-default-notes-file "~/Documents/notes/notes.org")
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+	("T" "Todo (no context link)" entry (file+headline "~/org/gtd.org" "Tasks")
+	 "* TODO %?\n %i\n")
+        ("j" "Journal" entry (file+datetree "~/org/journal.org")
+	 "* %?\nEntered on %U\n  %i\n  %a")
+	("J" "Journal (no context link)" entry (file+datetree "~/org/journal.org")
+	 "* %?\nEntered on %U\n  %i\n")))
+
 ;; use-package
+;; configuration macros to simplify emacs config
 (eval-when-compile
   (require 'use-package))
 
@@ -88,7 +71,7 @@
   :config
   (sml/setup))
 
-(use-package dashboard
+(use-package dashboard 
   :ensure t
   :config
   (setq dashboard-banner-logo-title "Welcome to (GNU) Emacs: An extensible, customizable, free/libre text editor - and more."
@@ -112,6 +95,11 @@
   (global-set-key (kbd "C-x b") 'helm-buffers-list)
   (global-set-key (kbd "C-x r b") 'helm-bookmarks)
   (global-set-key (kbd "M-y") 'helm-show-kill-ring))
+
+(use-package company-mode
+  :hook (emacs-lisp-mode . company-mode)
+  :config
+  (setq company-format-margin-function #'company-vscode-light-icons-margin))
 
 (use-package popwin
   :config
