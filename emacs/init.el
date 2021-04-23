@@ -5,6 +5,9 @@
 ;; set save directory
 (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
 
+;; theme
+(load-theme 'spacemacs-dark t)
+
 ;; disable toobar, and scrollbar
 (tool-bar-mode -1)
 ;; (menu-bar-mode -1)
@@ -17,14 +20,17 @@
 
 ;; font, cursor
 (add-to-list 'default-frame-alist '(font . "Hack 11"))
-;; (setq-default cursor-type 'bar)
+(setq-default cursor-type 'bar)
+
+;; show trailing whitespace
+(setq-default show-trailing-whitespace t)
 
 ;; when writing any kind of text
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'text-mode-hook 'auto-fill-mode)
 
 ;; when writing code
-(add-hook 'prog-mode-hook 'which-function-mode)
+;; (add-hook 'prog-mode-hook 'which-function-mode)
 
 ;; some settings for elisp
 (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -38,18 +44,21 @@
 
 ;; some settings for org-mode
 (require 'org)
-(setq org-startup-indented t)
+(setq org-startup-indented t
+      org-list-allow-alphabetical t
+      org-ellipsis "↬"
+      org-startup-with-latex-preview t)
 (add-to-list 'org-modules 'org-habit)
 
 (setq org-default-notes-file "~/Documents/notes/notes.org")
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
-         "* TODO %?\n  %i\n  %a")
-	("T" "Todo (no context link)" entry (file+headline "~/org/gtd.org" "Tasks")
+      '(("t" "Todo" entry (file+headline "~/Documents/notes/gtd.org" "Tasks")
+	 "* TODO %?\n  %i\n  %a")
+	("T" "Todo (no context link)" entry (file+headline "~/Documents/notes/gtd.org" "Tasks")
 	 "* TODO %?\n %i\n")
-        ("j" "Journal" entry (file+datetree "~/org/journal.org")
+	("j" "Journal" entry (file+datetree "~/Documents/notes/journal.org")
 	 "* %?\nEntered on %U\n  %i\n  %a")
-	("J" "Journal (no context link)" entry (file+datetree "~/org/journal.org")
+	("J" "Journal (no context link)" entry (file+datetree "~/Documents/notes/journal.org")
 	 "* %?\nEntered on %U\n  %i\n")))
 
 ;; use-package
@@ -57,19 +66,16 @@
 (eval-when-compile
   (require 'use-package))
 
-(use-package zenburn-theme
-  :init
-  (setq zenburn-use-variable-pitch t
-	zenburn-scale-org-headlines t
-	zenburn-scale-outline-headlines t)
-  :config
-  (load-theme 'zenburn t))
+;; (use-package zenburn-theme
+;;   :init
+;;   (setq zenburn-use-variable-pitch t
+;; 	zenburn-scale-org-headlines t
+;; 	zenburn-scale-outline-headlines t)
+;;   :config
+;;   (load-theme 'zenburn t))
 
-(use-package smart-mode-line
-  :init
-  (setq sml/theme 'respectful)
-  :config
-  (sml/setup))
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode))
 
 (use-package dashboard
   :ensure t
@@ -112,10 +118,6 @@
   (global-set-key (kbd "<f5>") 'treemacs))
 
 (use-package all-the-icons)
-
-(use-package all-the-icons-dired
-  :init
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -170,7 +172,7 @@
 
 (use-package lsp-mode
   :hook (
-	 (python-mode . lsp)
+	 ;; (python-mode . lsp)
 	 (c-mode . lsp)
 	 (rustic-mode . lsp)
 	 (go-mode . lsp)
@@ -187,8 +189,10 @@
 	read-process-output-max (* 1024 1024) ;; 1mb
 	lsp-log-io nil
 	lsp-completion-provider :capf
-	lsp-keymap-prefix "s-l")
-  (setq lsp-modeline-code-actions-segments '(count icon name))
+	lsp-keymap-prefix "s-l"
+	lsp-modeline-code-actions-segments '(count icon name)
+	lsp-enable-indentation t
+	lsp-enable-on-type-formatting t)
 
   (use-package lsp-ui
     :commands lsp-ui-mode
@@ -205,14 +209,14 @@
 	  lsp-ui-doc-position 'bottom))
 
   (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-  
+
   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
   ;; rust lsp
   (add-hook 'before-save-hook (lambda () (when (eq 'rustic-mode major-mode)
 					   (lsp-format-buffer))))
   (setq rustic-lsp-server "rust-analyzer")
-  
+
   ;; go lsp
   (defun lsp-go-install-save-hooks ()
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
@@ -230,12 +234,16 @@
 (use-package racket-mode
   :hook (scheme-mode . racket-mode))
 
+(use-package elpy
+  :init
+  (elpy-enable))
+
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "pandoc --pdf-engine=xelatex")
   :config (setq tab-width 4
 		indent-tabs-mode t
