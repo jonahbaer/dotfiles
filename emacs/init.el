@@ -5,9 +5,6 @@
 ;; set save directory
 (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
 
-;; theme
-(load-theme 'spacemacs-dark t)
-
 ;; disable toobar, and scrollbar
 (tool-bar-mode -1)
 ;; (menu-bar-mode -1)
@@ -66,19 +63,29 @@
 (eval-when-compile
   (require 'use-package))
 
-;; (use-package zenburn-theme
-;;   :init
-;;   (setq zenburn-use-variable-pitch t
-;; 	zenburn-scale-org-headlines t
-;; 	zenburn-scale-outline-headlines t)
-;;   :config
-;;   (load-theme 'zenburn t))
+(use-package vterm
+  :init
+  (setq vterm-shell "/bin/fish"))
 
-(use-package doom-modeline
-  :hook (after-init . doom-modeline-mode))
+(use-package doom-themes
+  :init
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-mode))
+
+  (use-package solaire-mode
+    :hook(after-init . solaire-global-mode))
+
+  :config
+  (setq doom-themes-enable-bold t
+	doom-themes-enable-italic t
+	doom-themes-treemacs-theme "doom-colors")
+
+  (load-theme 'doom-one t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config))
 
 (use-package dashboard
-  :ensure t
   :config
   (setq dashboard-banner-logo-title "Welcome to (GNU) Emacs: An extensible, customizable, free/libre text editor - and more."
 	dashboard-startup-banner 'logo
