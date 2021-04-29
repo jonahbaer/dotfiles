@@ -44,7 +44,8 @@
 (setq org-startup-indented t
       org-list-allow-alphabetical t
       org-ellipsis "↬"
-      org-startup-with-latex-preview t)
+      org-startup-with-latex-preview t
+      org-hide-emphasis-markers t)
 (add-to-list 'org-modules 'org-habit)
 
 (setq org-default-notes-file "~/Documents/notes/notes.org")
@@ -195,7 +196,6 @@
 
 (use-package flycheck
   :ensure t
-  :ensure t
   :init (global-flycheck-mode))
 
 (use-package lsp-mode
@@ -276,7 +276,6 @@
   (elpy-enable))
 
 (use-package markdown-mode
-  :ensure t
   :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
