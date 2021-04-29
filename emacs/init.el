@@ -17,7 +17,7 @@
 
 ;; font, cursor
 (add-to-list 'default-frame-alist '(font . "Hack 11"))
-(setq-default cursor-type 'bar)
+;; (setq-default cursor-type 'bar)
 
 ;; show trailing whitespace
 (setq-default show-trailing-whitespace t)
