@@ -1,3 +1,63 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#2D2A2E" "#e84c58" "#91f368" "#eed891" "#41b0f3" "#cea2ca" "#6bd9db" "#eee6d3"])
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(custom-safe-themes
+   '("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default))
+ '(fci-rule-color "#383838")
+ '(newsticker-url-list
+   '(("Slashdot" "http://rss.slashdot.org/Slashdot/slashdotMain" nil nil nil)
+     ("Arch Linux" "https://archlinux.org/feeds/news/" nil nil nil)
+     ("FiveThirtyEight" "https://fivethirtyeight.com/all/feed" nil nil nil)))
+ '(nrepl-message-colors
+   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
+ '(org-agenda-files
+   '("~/Documents/notes/misc.org" "~/Documents/school/school.org"))
+ '(org-format-latex-options
+   '(:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+		 ("begin" "$1" "$" "$$" "\\(" "\\[")))
+ '(package-selected-packages
+   '(solaire-mode doom-themes vterm elpy doom-modeline racket-mode helm-themes fish-mode helm-lsp helm org-superstar popwin lsp-treemacs projectile helpful dashboard rustic go-mode all-the-icons magit aggressive-indent smartparens company-lsp nlinum-relative ccls rainbow-delimiters markdown-mode which-key company flycheck lsp-ui lsp-mode use-package))
+ '(pos-tip-background-color "#2E2A29")
+ '(pos-tip-foreground-color "#d4d4d6")
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   '((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3")))
+ '(vc-annotate-very-old-color "#DC8CC3"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-document-title ((t (:foreground "#78DCE8" :underline t :weight bold :height 2.0))))
+ '(org-level-1 ((t (:inherit outline-1 :extend nil :weight bold :height 1.5))))
+ '(org-level-2 ((t (:inherit outline-2 :extend nil :weight bold :height 1.3)))))
+
+
 ;; Set up melpa
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -43,10 +103,13 @@
 (require 'org)
 (setq org-startup-indented t
       org-list-allow-alphabetical t
-      org-ellipsis "↬"
+      org-ellipsis "⮷"
       org-startup-with-latex-preview t
       org-hide-emphasis-markers t)
 (add-to-list 'org-modules 'org-habit)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
 
 (setq org-default-notes-file "~/Documents/notes/notes.org")
 (setq org-capture-templates
@@ -74,7 +137,7 @@
     :hook (after-init . doom-modeline-mode))
 
   (use-package solaire-mode
-    :hook(after-init . solaire-global-mode))
+    :hook (after-init . solaire-global-mode))
 
   :config
   (setq doom-themes-enable-bold t
@@ -111,7 +174,9 @@
   (global-set-key (kbd "M-y") 'helm-show-kill-ring))
 
 (use-package company-mode
-  :hook (emacs-lisp-mode . company-mode)
+  :hook
+  (emacs-lisp-mode . company-mode)
+  (racket-mode . company-mode)
   :config
   (setq company-format-margin-function #'company-vscode-light-icons-margin))
 
@@ -174,6 +239,10 @@
 
 (use-package company)
 
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+
 (use-package flycheck
   :init (global-flycheck-mode))
 
@@ -213,7 +282,9 @@
 	  lsp-ui-peek-show-directory t
 	  lsp-ui-doc-enable t
 	  lsp-ui-doc-header t
-	  lsp-ui-doc-position 'bottom))
+	  lsp-ui-doc-use-childframe t
+	  lsp-ui-doc-position 'bottom
+	  lsp-ui-imenu-enable t))
 
   (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 
